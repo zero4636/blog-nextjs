@@ -1,0 +1,70 @@
+{
+  "users": [
+    {
+      "username": "bss123@#",
+      "password": "$2b$10$n9WGjGmGGKjm9XwHBASRCOOTHy7zhpfG.ElEBdcsApjyR26DLOAWy",
+      "refreshToken": "c4dJDUBZZct027u18GWjNtRn2lPAW89yw9Q83RwSKaeE9Uvb1zt8xuPSMQ6UMawaEgzLPMOVufoe7Qi74n1LLGjtWCfbqx3cvV6v"
+    },
+    {
+      "username": "test123",
+      "password": "$2b$10$5StvixWSIsPIdjTU7AIgred0tRWgw1O3SOuoE8TF.JP./r1Ms4S8.",
+      "refreshToken": "1pIVr51YofesCV2hWduSiaTBmLIt8agQB0GmHdgW4poVZV6rfYXyjSOlHXrBGicRZCoA7BPottZPDAZyFoF6KzyTG8SnmSOPcO9T"
+    },
+    {
+      "username": "devbss",
+      "password": "$2b$10$6IH3hQJM7tHrzzLc5pVWb.dtsEVNXhyDiKy8yA5Ec8vP60nS8vNuC",
+      "refreshToken": "e5eMj3lyvxjDkOvKLWPJ4Er1jvuctHyjRFWu6NTa60xbNyPagOTpg22eokWTtfutAq5sMHOU3huDCpvg07FF479rVuxQF8FTF6pi"
+    }
+  ],
+  "categories": [
+    {
+      "id": "hKV9YtKnhsptfwTe",
+      "name": "dongtd",
+      "description": "123456"
+    },
+    {
+      "id": "t3HlGkJOZZdcKrdB",
+      "name": "dongtd2",
+      "description": "1234567"
+    }
+  ],
+  "writers": [
+    {
+      "id": "1",
+      "name": "Author 1",
+      "bio": "Bio of Author 1",
+      "short_description": "",
+      "detail_description": ""
+    },
+    {
+      "id": "2",
+      "name": "Author 2",
+      "bio": "Bio of Author 2",
+      "short_description": "",
+      "detail_description": ""
+    }
+  ],
+  "posts": [
+    {
+      "id": "1",
+      "title": "First Post",
+      "content": "This is the content of the first post.",
+      "category_id": "1",
+      "author_id": "1"
+    },
+    {
+      "id": "2",
+      "title": "Second Post",
+      "content": "This is the content of the second post.",
+      "category_id": "2",
+      "author_id": "1"
+    },
+    {
+      "id": "3",
+      "title": "Third Post",
+      "content": "This is the content of the third post.",
+      "category_id": "1",
+      "author_id": "2"
+    }
+  ]
+}

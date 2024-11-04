@@ -1,0 +1,59 @@
+### TEMPLATES 2.2
+x-logging:
+    logging: &logging
+        options:
+            max-size: "10m"
+            max-file: "3"
+x-restart:
+    restart: &restart unless-stopped
+
+services:
+    pwa:
+        image: rogerdz/node:${NODE_VERSION}
+        command: pm2-runtime start --no-auto-exit "${NODE_COMMAND}" --name ${COMPOSE_PROJECT_NAME}-pwa
+        labels:
+            - traefik.enable=true
+
+            - traefik.http.routers.pwa-${COMPOSE_PROJECT_NAME}.rule=Host(`${VIRTUAL_HOST}`)
+            - traefik.http.routers.pwa-${COMPOSE_PROJECT_NAME}.entrypoints=http,https
+            - traefik.http.routers.pwa-${COMPOSE_PROJECT_NAME}.service=pwa-${COMPOSE_PROJECT_NAME}
+            - traefik.http.services.pwa-${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=${VIRTUAL_PORT:-8000}
+
+            # Redirect all http requests to https
+            - traefik.http.routers.pwa-${COMPOSE_PROJECT_NAME}.middlewares=https-redirect@file
+        networks:
+            proxy:
+                aliases:
+                    - ${VIRTUAL_HOST}
+        environment:
+            UID: ${DOCKER_UID:-1000}
+            GID: ${DOCKER_GID:-1000}
+            VIRTUAL_HOST: ${VIRTUAL_HOST}
+            NODE_ENV: ${NODE_ENV}
+            PORT: ${VIRTUAL_PORT:-8000}
+            STAGING_SERVER_PORT: ${VIRTUAL_PORT:-8000}
+            DEV_SERVER_PORT: ${VIRTUAL_PORT:-8000}
+            NODE_TLS_REJECT_UNAUTHORIZED: 0
+            NODE_EXTRA_CA_CERTS: /mkcert/rootCA.pem
+            NODE_OPTIONS: --max-old-space-size=${MAX_OLD_SPACE_SIZE:-3000}
+        external_links:
+            - "proxy:${BACKEND_HOST}"
+        volumes:
+            - ${WORK_DIR}:/app:cached
+            - ${CA_STORE:-/usr/local/share/ca-certificates}:/usr/local/share/ca-certificates:ro
+            - ~/.local/share/mkcert:/mkcert:ro
+            - ~/.ssh:/home/node/.ssh:delegated
+            - ~/.config/git:/home/node/.config/git:delegated
+        working_dir: /app
+        ports:
+            - "5000:5000"
+        # tty: true
+        # stdin_open: true
+        init: true
+        restart: *restart
+        logging: *logging
+        hostname: pwa-${COMPOSE_PROJECT_NAME}-docker
+
+networks:
+    proxy:
+        external: true
