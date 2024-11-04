@@ -29,5 +29,5 @@ All the `nextjs` project's coded sources are located in the `next-app` directory
 ## Getting Started
 1. Clone the repository.
 2. Run `docker/bin/up` to install all service
-3. Cd into the `node-api` directory and run `bash start.sh` or `bash stop.sh` to enable the node service
-4. Cd into the `next-app` directory and run `npm run dev` to start project next.
+3. Cd into the `node-api` directory and run `bash start.sh` or `bash stop.sh` to enable the node service (run `npm install` before)
+4. Cd into the `next-app` directory and run `npm run dev` to start project next (run `npm install` before).

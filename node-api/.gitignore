@@ -47,3 +47,8 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+# Bash support
+app.pid
+app.log
+error.log
