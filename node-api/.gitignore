@@ -49,6 +49,4 @@ Thumbs.db
 *.wmv
 
 # Bash support
-app.pid
-app.log
-error.log
+*.pid
