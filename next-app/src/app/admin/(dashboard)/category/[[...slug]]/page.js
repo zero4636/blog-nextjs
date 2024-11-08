@@ -7,17 +7,18 @@ async function getData(params, searchParams) {
         const data = await getCate(params, searchParams) || [];
 
         if (data.status === 200) {
-            return data.data; // Return the user data if the status is 200
+            return data.data;
         } else {
-            return null; // Return null if the status is not 200 (error case)
+            return { pagination: {}, categories: [] };
         }
     } catch (error) {
         console.error('Error fetching categories data:', error);
-        return null; // Return null in case of an error
+        return null;
     }
 }
 
 export default async function Page({ params, searchParams }) {
+    console.log(searchParams)
     const { pagination, categories } = await getData(params, searchParams);
 
     return (

@@ -85,7 +85,7 @@ export const getUser = async (token) => {
 
 // Service Category
 
-export const getCate = async (params, searchParams, baseUrl) => {
+export const getCate = async (params, searchParams) => {
     const pageNumner = params?.slug?.[0]?.[0] ?? 1,
         limit = params?.slug?.[1]?.[1] ?? 10,
         searchTerm = (searchParams.search != undefined) ? searchParams.search : null;

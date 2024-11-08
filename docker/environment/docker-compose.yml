@@ -10,7 +10,7 @@ x-restart:
 services:
     pwa:
         image: rogerdz/node:${NODE_VERSION}
-        command: pm2-runtime start --no-auto-exit "${NODE_COMMAND}" --name ${COMPOSE_PROJECT_NAME}-pwa
+        command: pm2-runtime start --no-auto-exit "${NEXT_COMMAND}" --name ${COMPOSE_PROJECT_NAME}-next
         labels:
             - traefik.enable=true
 

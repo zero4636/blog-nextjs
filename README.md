@@ -16,18 +16,17 @@ Docker will build services to create a project run environment
 Node api to create APIs that interact with project data. All source code is in the folder `node-api`
 
 - Access the `node-api` project folder.
-- Run `bash start.sh` to run service in the background.
-- Run `bash stop.sh` to stop service.
+- Run `bash bin/start.sh` to run service in the background.
+- Run `bash bin/stop.sh` to stop service.
+- By default, `Docker` uses `pm2` to run node app. Check in the `bin` folder to use `cmd` support.
 
 ## Start next app
 All the `nextjs` project's coded sources are located in the `next-app` directory.
-
-- Run `nextjs` after launching the node api service.
-- Cmd to run `npm run dev`.
+By default `next-app` is always started when using `docker` via `pm2`. 
 
 
 ## Getting Started
 1. Clone the repository.
-2. Run `docker/bin/up` to install all service
-3. Cd into the `node-api` directory and run `bash start.sh` or `bash stop.sh` to enable the node service (run `npm install` before)
-4. Cd into the `next-app` directory and run `npm run dev` to start project next (run `npm install` before).
+2. Run `docker/bin/up` to install all service.
+3. Run `npm install` for `next-app` && `node-api` app.
+4. Cd into the `node-api` directory and run `bash bin/start.sh` or `bash bin/stop.sh` to enable the node service (run `npm install` before).
