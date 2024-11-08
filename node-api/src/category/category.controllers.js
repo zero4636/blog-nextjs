@@ -13,7 +13,6 @@ exports.getCategories = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
 exports.getCategoriesLimit = async (req, res) => {
     try {
         const { pageNumber = 1, limit = 5 } = req.params;

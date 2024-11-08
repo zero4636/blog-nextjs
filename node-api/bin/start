@@ -10,8 +10,11 @@ ERROR_LOG="${LOG_DIR}/${APP_NAME}_error.log"
 mkdir -p "$LOG_DIR"
 
 if pm2 list | grep -q "$APP_NAME"; then
-    echo "The application $APP_NAME is already running. Skipping start."
+    echo "The application $APP_NAME is already exist. Restarting..."
+    npm install
+    pm2 restart "$APP_NAME" --output "$OUTPUT_LOG" --error "$ERROR_LOG"
 else
     echo "Starting application $APP_NAME..."
+    npm install
     pm2 start "$APP_COMMAND" --name "$APP_NAME" --output "$OUTPUT_LOG" --error "$ERROR_LOG"
 fi
