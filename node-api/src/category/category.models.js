@@ -1,9 +1,8 @@
 const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
-
 const adapter = new FileSync('data.json');
-const db = lowdb(adapter);
 
+const db = lowdb(adapter);
 const TABLENAME = 'categories';
 
 exports.TABLENAME = TABLENAME;
@@ -18,28 +17,35 @@ exports.getCate = async () => {
   }
 };
 
-exports.getPaginatedCateWithDetails = async (pageNumber, limit) => {
+exports.getPaginatedCateWithDetails = async (pageNumber, limit, search = "") => {
   try {
-    const categories = await db.get(TABLENAME).cloneDeep().value();
-    const totalCategories = categories.length;
+    let categories = await db.get(TABLENAME).cloneDeep().value();
 
+    if (search) {
+      categories = categories.filter((category) =>
+        category.name.toLowerCase().includes(search.toLowerCase()) ||
+        category.description.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    const totalCategories = categories.length;
     const startIndex = (pageNumber - 1) * limit;
     const endIndex = startIndex + limit;
 
-    // Slice the categories array to get the desired page of categories
     const paginatedCategories = categories.slice(startIndex, endIndex);
     const totalPages = Math.ceil(totalCategories / limit)
     const prevPage = (pageNumber < totalPages) ? (pageNumber + 1) : null;
 
-    //   return categories;
     return {
       pagination: {
         totalCategories,
         totalPages: totalPages,
+        limit: parseInt(limit),
         currentPage: parseInt(pageNumber),
         prevPage: prevPage
       },
-      categories: paginatedCategories,
+      searchText: search,
+      categories: paginatedCategories
     };
   } catch {
     console.error('Error while getting data:', error);
@@ -47,7 +53,6 @@ exports.getPaginatedCateWithDetails = async (pageNumber, limit) => {
   }
 };
 
-// Suppose you want to retrieve a category by its ID (assuming the ID is stored in a field called 'id').
 exports.getCategoryById = async (categoryId) => {
   try {
     const category = db.get(TABLENAME).cloneDeep().find({ id: categoryId }).value();
@@ -58,8 +63,6 @@ exports.getCategoryById = async (categoryId) => {
   }
 };
 
-
-// Create cate
 exports.createCate = async cate => {
   try {
     await db.get(TABLENAME).push(cate).write();
@@ -69,8 +72,6 @@ exports.createCate = async cate => {
     return false;
   }
 };
-
-// Remove cate
 
 exports.deleteById = async (categoryId) => {
   try {

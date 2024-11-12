@@ -5,13 +5,13 @@ const userModel = require('../users/users.models');
 const authMethod = require('./auth.methods');
 
 const jwtVariable = require('../../variables/jwt');
-const {SALT_ROUNDS} = require('../../variables/auth');
+const { SALT_ROUNDS } = require('../../variables/auth');
 
 exports.register = async (req, res) => {
 	const username = req.body.username.toLowerCase();
 	const user = await userModel.getUser(username);
 	if (user) {
-		return res.status(409).json({msg: 'Tên tài khoản đã tồn tại.'});
+		return res.status(409).json({ msg: 'Account name already exists.' });
 	} else {
 		const hashPassword = bcrypt.hashSync(req.body.password, SALT_ROUNDS);
 		const newUser = {
@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
 		if (!createUser) {
 			return res
 				.status(400)
-				.json({msg: 'Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.'});
+				.json({ msg: 'There was an error creating the account, please try again.' });
 		}
 		return res.json({
 			username,
@@ -36,12 +36,12 @@ exports.login = async (req, res) => {
 
 	const user = await userModel.getUser(username);
 	if (!user) {
-		return res.status(401).json({msg:'Tên đăng nhập không tồn tại.'});
+		return res.status(401).json({ msg: 'Username does not exist.' });
 	}
 
 	const isPasswordValid = bcrypt.compareSync(password, user.password);
 	if (!isPasswordValid) {
-		return res.status(401).json({msg:'Mật khẩu không chính xác.'});
+		return res.status(401).json({ msg: 'Password is incorrect.' });
 	}
 
 	const accessTokenLife =
@@ -60,20 +60,18 @@ exports.login = async (req, res) => {
 	if (!accessToken) {
 		return res
 			.status(401)
-			.json({msg: 'Đăng nhập không thành công, vui lòng thử lại.'});
+			.json({ msg: 'Login failed, please try again.' });
 	}
 
-	let refreshToken = randToken.generate(jwtVariable.refreshTokenSize); // tạo 1 refresh token ngẫu nhiên
+	let refreshToken = randToken.generate(jwtVariable.refreshTokenSize);
 	if (!user.refreshToken) {
-		// Nếu user này chưa có refresh token thì lưu refresh token đó vào database
 		await userModel.updateRefreshToken(user.username, refreshToken);
 	} else {
-		// Nếu user này đã có refresh token thì lấy refresh token đó từ database
 		refreshToken = user.refreshToken;
 	}
 
 	return res.json({
-		msg: 'Đăng nhập thành công.',
+		msg: 'Log in successfully.',
 		accessToken,
 		refreshToken,
 		user,
@@ -81,16 +79,14 @@ exports.login = async (req, res) => {
 };
 
 exports.refreshToken = async (req, res) => {
-	// Lấy access token từ header
 	const accessTokenFromHeader = req.headers.x_authorization;
 	if (!accessTokenFromHeader) {
-		return res.status(400).send('Không tìm thấy access token.');
+		return res.status(400).send('Access token not found.');
 	}
 
-	// Lấy refresh token từ body
 	const refreshTokenFromBody = req.body.refreshToken;
 	if (!refreshTokenFromBody) {
-		return res.status(400).send('Không tìm thấy refresh token.');
+		return res.status(400).send('No refresh token found.');
 	}
 
 	const accessTokenSecret =
@@ -98,27 +94,25 @@ exports.refreshToken = async (req, res) => {
 	const accessTokenLife =
 		process.env.ACCESS_TOKEN_LIFE || jwtVariable.accessTokenLife;
 
-	// Decode access token đó
 	const decoded = await authMethod.decodeToken(
 		accessTokenFromHeader,
 		accessTokenSecret,
 	);
 	if (!decoded) {
-		return res.status(400).send('Access token không hợp lệ.');
+		return res.status(400).send('Access token is invalid.');
 	}
 
-	const username = decoded.payload.username; // Lấy username từ payload
+	const username = decoded.payload.username;
 
 	const user = await userModel.getUser(username);
 	if (!user) {
-		return res.status(401).send('User không tồn tại.');
+		return res.status(401).send('User does not exist.');
 	}
 
 	if (refreshTokenFromBody !== user.refreshToken) {
-		return res.status(400).send('Refresh token không hợp lệ.');
+		return res.status(400).send('Refresh token is not valid.');
 	}
 
-	// Tạo access token mới
 	const dataForAccessToken = {
 		username,
 	};
@@ -131,7 +125,7 @@ exports.refreshToken = async (req, res) => {
 	if (!accessToken) {
 		return res
 			.status(400)
-			.send('Tạo access token không thành công, vui lòng thử lại.');
+			.send('Creating access token failed, please try again.');
 	}
 	return res.json({
 		accessToken,
@@ -139,5 +133,5 @@ exports.refreshToken = async (req, res) => {
 };
 
 exports.validateToken = async (req, res) => {
-	return res.json({msg: 'Access token hợp lệ.'})
+	return res.json({ msg: 'Access token is valid.' })
 }

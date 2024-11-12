@@ -5,11 +5,10 @@ const userModle = require('../users/users.models');
 const authMethod = require('./auth.methods');
 
 exports.isAuth = async (req, res, next) => {
-	// Lấy access token từ header
 	const accessTokenFromHeader = req.headers.x_authorization;
 
 	if (!accessTokenFromHeader) {
-		return res.status(401).json({msg: 'Không tìm thấy access token!'});
+		return res.status(401).json({ msg: 'Access token not found!' });
 	}
 
 	const accessTokenSecret =
@@ -22,7 +21,7 @@ exports.isAuth = async (req, res, next) => {
 	if (!verified) {
 		return res
 			.status(401)
-			.json({ msg: 'Bạn không có quyền truy cập vào tính năng này!'});
+			.json({ msg: 'You do not have access to this feature!' });
 	}
 
 	const user = await userModle.getUser(verified.payload.username);

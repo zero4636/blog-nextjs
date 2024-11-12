@@ -18,11 +18,9 @@ async function getData(params, searchParams) {
 }
 
 export default async function Page({ params, searchParams }) {
-    console.log(searchParams)
     const { pagination, categories } = await getData(params, searchParams);
-
     return (
-        <CateLayout>
+        <CateLayout pagination={pagination}>
             <CateList categories={categories} />
         </CateLayout>
     );

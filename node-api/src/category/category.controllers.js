@@ -15,8 +15,9 @@ exports.getCategories = async (req, res) => {
 };
 exports.getCategoriesLimit = async (req, res) => {
     try {
-        const { pageNumber = 1, limit = 5 } = req.params;
-        const categoriesData = await cateModel.getPaginatedCateWithDetails(pageNumber, limit);
+        const { pageNumber = 1, limit = 10 } = req.params;
+        const { search = "" } = req.query;
+        const categoriesData = await cateModel.getPaginatedCateWithDetails(pageNumber, limit, search);
 
         if (categoriesData !== null) {
             res.json(categoriesData);
@@ -33,7 +34,7 @@ exports.getCategoriesId = async (req, res) => {
         const id = req.params.id;
         const cateDetail = await cateModel.getCategoryById(id)
 
-        if(cateDetail !== null) {
+        if (cateDetail !== null) {
             res.json(cateDetail);
         } else {
             res.status(404).json({ message: 'Categories not found' });

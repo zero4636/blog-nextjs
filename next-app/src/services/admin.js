@@ -86,9 +86,10 @@ export const getUser = async (token) => {
 // Service Category
 
 export const getCate = async (params, searchParams) => {
-    const pageNumner = params?.slug?.[0]?.[0] ?? 1,
-        limit = params?.slug?.[1]?.[1] ?? 10,
-        searchTerm = (searchParams.search != undefined) ? searchParams.search : null;
+    const pageNumner = parseInt(params?.slug?.[0] ?? 1),
+        limit = parseInt(params?.slug?.[1] ?? 10),
+        searchTerm = (searchParams.q != undefined) ? searchParams.q : null;
+
     try {
         let url = `cate/${pageNumner}/${limit}`;
 
